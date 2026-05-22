@@ -3,20 +3,20 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-import { FALLBACK_TRENDING_MOVIES, FALLBACK_TRENDING_TV } from "../src/data/fallbackData.ts";
+import { FALLBACK_TRENDING_MOVIES, FALLBACK_TRENDING_TV } from "./fallbackData";
 
 const app = express();
 app.use(express.json());
 
 // API Route: Configuration indicator for the frontend to show whether the real TMDB API is active
-app.get("/api/config", (req, res) => {
+app.get(["/api/config", "/config"], (req, res) => {
   res.json({
     hasTmdbKey: !!process.env.TMDB_API_KEY,
   });
 });
 
 // API Route: Get Trending Movies and TV Shows
-app.get("/api/media/trending", async (req, res) => {
+app.get(["/api/media/trending", "/media/trending"], async (req, res) => {
   const key = process.env.TMDB_API_KEY;
   if (!key || key === "MY_TMDB_API_KEY") {
     return res.json({
@@ -75,7 +75,7 @@ app.get("/api/media/trending", async (req, res) => {
 });
 
 // API Route: Universal Search for movies and shows
-app.get("/api/media/search", async (req, res) => {
+app.get(["/api/media/search", "/media/search"], async (req, res) => {
   const query = String(req.query.query || "").trim();
   if (!query) {
     return res.json({ results: [] });
@@ -122,7 +122,7 @@ app.get("/api/media/search", async (req, res) => {
 });
 
 // API Route: TV Show details containing seasons
-app.get("/api/tv/:id", async (req, res) => {
+app.get(["/api/tv/:id", "/tv/:id"], async (req, res) => {
   const id = req.params.id;
   const key = process.env.TMDB_API_KEY;
 
